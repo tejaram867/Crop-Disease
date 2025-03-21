@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface Disease {
   name: string;
@@ -15,6 +15,8 @@ interface AnalysisResultProps {
 }
 
 export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
+  const navigate = useNavigate();
+  
   const getTypeColor = (type: Disease['type']) => {
     switch (type) {
       case 'fungal':
@@ -38,6 +40,10 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
     } else {
       return <AlertTriangle className="w-5 h-5" />;
     }
+  };
+  
+  const handleViewDetails = () => {
+    navigate('/disease-info', { state: { disease: result } });
   };
 
   return (
@@ -77,6 +83,16 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
                 <p className="text-sm leading-relaxed">{result.treatment}</p>
               </div>
             )}
+            
+            <div className="pt-2">
+              <button
+                onClick={handleViewDetails}
+                className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+              >
+                View detailed information
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
