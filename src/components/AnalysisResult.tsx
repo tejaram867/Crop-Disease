@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { AlertTriangle, CheckCircle, Info, ArrowRight } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, ArrowRight, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export interface Disease {
@@ -45,6 +46,10 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
   const handleViewDetails = () => {
     navigate('/disease-info', { state: { disease: result } });
   };
+  
+  const handleViewReport = () => {
+    navigate('/health-report', { state: { disease: result } });
+  };
 
   return (
     <div className="w-full animate-slide-up">
@@ -84,13 +89,21 @@ export const AnalysisResult: React.FC<AnalysisResultProps> = ({ result }) => {
               </div>
             )}
             
-            <div className="pt-2">
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <button
                 onClick={handleViewDetails}
                 className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 View detailed information
                 <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              
+              <button
+                onClick={handleViewReport}
+                className="flex items-center gap-1.5 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+              >
+                View AI Health Report
+                <FileText className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
