@@ -9,7 +9,7 @@ export const Header: React.FC = () => {
       <div className="flex flex-col items-center">
         <Link to="/" className="hover:opacity-90 transition-opacity">
           <h1 className="text-2xl font-medium tracking-tight md:text-3xl">
-            CropSeeker
+            CropGuardian
           </h1>
         </Link>
         <p className="mt-1 text-sm font-light text-muted-foreground">

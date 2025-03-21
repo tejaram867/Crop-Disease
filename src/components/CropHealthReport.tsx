@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Disease } from './AnalysisResult';
 import { CircleCheck, CircleAlert, AlertTriangle, Info, ArrowLeftCircle, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, Cell, XAxis, YAxis, PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
 
@@ -117,30 +117,65 @@ const getSpreadRiskData = (score: number) => {
   ];
 };
 
-// Custom chart config for consistent colors
+// Fixed chart config (corrected to match interface)
 const chartConfig = {
-  severity: {
-    high: { theme: { light: '#ef4444', dark: '#ef4444' } },
-    medium: { theme: { light: '#f97316', dark: '#f97316' } },
-    low: { theme: { light: '#84cc16', dark: '#84cc16' } },
-    remaining: { theme: { light: '#e5e7eb', dark: '#374151' } }
+  severityHigh: { 
+    theme: { light: '#ef4444', dark: '#ef4444' } 
   },
-  confidence: {
-    value: { theme: { light: '#3b82f6', dark: '#60a5fa' } },
-    remaining: { theme: { light: '#e5e7eb', dark: '#374151' } }
+  severityMedium: { 
+    theme: { light: '#f97316', dark: '#f97316' } 
   },
-  spread: {
-    value: { theme: { light: '#8b5cf6', dark: '#a78bfa' } },
-    remaining: { theme: { light: '#e5e7eb', dark: '#374151' } }
+  severityLow: { 
+    theme: { light: '#84cc16', dark: '#84cc16' } 
+  },
+  remaining: { 
+    theme: { light: '#e5e7eb', dark: '#374151' } 
+  },
+  confidence: { 
+    theme: { light: '#3b82f6', dark: '#60a5fa' } 
+  },
+  spread: { 
+    theme: { light: '#8b5cf6', dark: '#a78bfa' } 
   }
 };
 
-interface CropHealthReportProps {
-  disease: Disease;
-}
+const CropHealthReport: React.FC = () => {
+  // Get disease data from location state
+  const location = useLocation();
+  const disease = location.state?.disease;
 
-const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
-  const report = generateReportData(disease);
+  // Generate report data
+  const report = disease ? generateReportData(disease) : null;
+
+  // If no disease data is available, show a message
+  if (!disease || !report) {
+    return (
+      <div className="w-full animate-fade-in space-y-8 p-6">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors">
+            <ArrowLeftCircle className="w-4 h-4" />
+            <span>Back to Analysis</span>
+          </Link>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>No Data Available</CardTitle>
+            <CardDescription>
+              Please analyze a crop image first to generate a health report.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Return to the home page to upload and analyze an image.</p>
+          </CardContent>
+          <CardFooter>
+            <Link to="/" className="text-primary hover:text-primary/80 transition-colors">
+              Go to Home
+            </Link>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
 
   // Dynamic styling based on severity
   const getSeverityColor = (level: string) => {
@@ -230,7 +265,7 @@ const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
               <div className="flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <ChartContainer className="h-32" config={chartConfig}>
+                    <ChartContainer className="h-32">
                       <PieChart>
                         <Pie
                           data={getSeverityChartData(report.severity.score)}
@@ -241,8 +276,9 @@ const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
                           paddingAngle={4}
                           dataKey="value"
                         >
-                          <Cell fill="var(--color-severity-high)" />
-                          <Cell fill="var(--color-remaining)" />
+                          <Cell fill={report.severity.level === 'high' ? '#ef4444' : 
+                                     report.severity.level === 'medium' ? '#f97316' : '#84cc16'} />
+                          <Cell fill="#e5e7eb" />
                         </Pie>
                         <ChartTooltip
                           content={<ChartTooltipContent />}
@@ -254,7 +290,7 @@ const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
                     </div>
                   </div>
                   <div>
-                    <ChartContainer className="h-32" config={chartConfig}>
+                    <ChartContainer className="h-32">
                       <PieChart>
                         <Pie
                           data={getSpreadRiskData(report.spread.rate)}
@@ -265,8 +301,8 @@ const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
                           paddingAngle={4}
                           dataKey="value"
                         >
-                          <Cell fill="var(--color-spread-value)" />
-                          <Cell fill="var(--color-remaining)" />
+                          <Cell fill="#8b5cf6" />
+                          <Cell fill="#e5e7eb" />
                         </Pie>
                         <ChartTooltip
                           content={<ChartTooltipContent />}
@@ -382,6 +418,45 @@ const CropHealthReport: React.FC<CropHealthReportProps> = ({ disease }) => {
           <CardFooter className="text-xs text-muted-foreground">
             <Info className="w-3 h-3 mr-1" /> References are provided for educational purposes
           </CardFooter>
+        </Card>
+        
+        {/* Overall Conclusion */}
+        <Card className="mt-6 border-t-4 border-primary">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-1.5 rounded-full bg-primary/10">
+                <Info className="w-5 h-5 text-primary" />
+              </div>
+              <span>Overall Conclusion</span>
+            </CardTitle>
+            <CardDescription>
+              Summary assessment and next steps
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm leading-relaxed">
+              {disease.type === 'healthy' ? (
+                <>Your crop appears to be in excellent health with no signs of disease or stress. Continue with current agricultural practices and regular monitoring to maintain this healthy state.</>
+              ) : (
+                <>
+                  Based on our analysis, your crop is affected by {disease.name} ({report.scientificName}), a {disease.type} disease with {report.severity.level} severity. 
+                  Immediate action is recommended to prevent further spread and damage. Follow the treatment plan outlined above, implement preventive measures, 
+                  and consider consulting with a local agricultural extension service for on-site assessment.
+                </>
+              )}
+            </p>
+            
+            <div className="mt-4 p-3 border rounded-lg bg-accent/30">
+              <h4 className="text-sm font-medium mb-2">Recommended Next Steps:</h4>
+              <ul className="text-xs space-y-1 text-muted-foreground">
+                <li>• Implement recommended treatments without delay</li>
+                <li>• Monitor crop regularly for changes in disease progression</li>
+                <li>• Apply preventive measures to protect unaffected plants</li>
+                <li>• Consider soil testing to identify any nutrient imbalances</li>
+                <li>• Document progress and response to treatments for future reference</li>
+              </ul>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>

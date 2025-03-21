@@ -48,7 +48,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <section className="max-w-3xl mx-auto">
+      <section className="max-w-4xl mx-auto">
         <div className="mb-8 text-center animate-fade-in">
           <div className="inline-flex items-center justify-center px-3 py-1 mb-4 text-xs font-medium rounded-full bg-primary/10 text-primary">
             Crop Disease Identification
@@ -59,6 +59,17 @@ const Index = () => {
           <p className="text-muted-foreground max-w-lg mx-auto">
             Upload an image of your crop to instantly identify diseases, get detailed information, and receive treatment recommendations.
           </p>
+        </div>
+        
+        {/* Hero image */}
+        <div className="mb-10 flex justify-center">
+          <div className="rounded-xl overflow-hidden shadow-lg border border-border max-w-2xl">
+            <img 
+              src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+              alt="Farmer examining crops" 
+              className="w-full h-64 object-cover" 
+            />
+          </div>
         </div>
         
         <div className="space-y-8">
