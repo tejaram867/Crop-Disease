@@ -61,14 +61,23 @@ const Index = () => {
           </p>
         </div>
         
-        {/* Hero image */}
-        <div className="mb-10 flex justify-center">
-          <div className="rounded-xl overflow-hidden shadow-lg border border-border max-w-2xl">
+        {/* Hero section with transparent crop image and heading */}
+        <div className="mb-10 relative rounded-xl overflow-hidden shadow-lg">
+          <div className="relative aspect-video w-full h-[400px]">
             <img 
-              src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
-              alt="Farmer examining crops" 
-              className="w-full h-64 object-cover" 
+              src="/transparent-crop.png" 
+              alt="Healthy crop plants" 
+              className="w-full h-full object-contain absolute inset-0 z-10"
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20 z-0"></div>
+            <div className="absolute inset-0 flex flex-col justify-center items-center z-20 p-6 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4">
+                CropGuardian
+              </h2>
+              <p className="text-lg text-white drop-shadow-md max-w-lg">
+                Your AI-powered assistant for identifying and treating crop diseases
+              </p>
+            </div>
           </div>
         </div>
         

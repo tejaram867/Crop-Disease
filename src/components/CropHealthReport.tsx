@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Disease } from './AnalysisResult';
-import { CircleCheck, CircleAlert, AlertTriangle, Info, ArrowLeftCircle, BookOpen } from 'lucide-react';
+import { CircleCheck, CircleAlert, AlertTriangle, Info, ArrowLeftCircle, BookOpen, Download } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, Cell, XAxis, YAxis, PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import { Button } from "@/components/ui/button";
 
 interface HealthReport {
   disease: Disease;
@@ -134,8 +135,50 @@ const chartConfig = {
 const CropHealthReport: React.FC = () => {
   const location = useLocation();
   const disease = location.state?.disease;
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const report = disease ? generateReportData(disease) : null;
+
+  const handleDownloadReport = () => {
+    if (!reportRef.current || !disease) return;
+    
+    const reportElement = reportRef.current;
+    
+    import('html2canvas').then(({ default: html2canvas }) => {
+      html2canvas(reportElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+      }).then(canvas => {
+        import('jspdf').then(({ default: jsPDF }) => {
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+          });
+          
+          const imgWidth = 210;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          const pageHeight = 297;
+          let heightLeft = imgHeight;
+          let position = 0;
+          
+          pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          
+          pdf.save(`CropGuardian-Report-${disease.name.replace(/\s+/g, '-')}.pdf`);
+        });
+      });
+    });
+  };
 
   if (!disease || !report) {
     return (
@@ -186,12 +229,17 @@ const CropHealthReport: React.FC = () => {
           <ArrowLeftCircle className="w-4 h-4" />
           <span>Back to Analysis</span>
         </Link>
-        <div className="text-sm text-muted-foreground">
-          Report generated on {new Date().toLocaleDateString()}
-        </div>
+        <Button 
+          variant="outline" 
+          className="flex items-center gap-1.5"
+          onClick={handleDownloadReport}
+        >
+          <Download className="w-4 h-4" />
+          <span>Download Report</span>
+        </Button>
       </div>
 
-      <div className="glass-panel p-6">
+      <div className="glass-panel p-6" ref={reportRef}>
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-2">AI Crop Health Report</h1>
           <p className="text-muted-foreground">
