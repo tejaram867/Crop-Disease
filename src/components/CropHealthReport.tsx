@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Disease } from './AnalysisResult';
@@ -7,7 +6,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { BarChart, Bar, Cell, XAxis, YAxis, PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
 
-// Additional metadata for the health report
 interface HealthReport {
   disease: Disease;
   severity: {
@@ -34,16 +32,12 @@ interface HealthReport {
   }[];
 }
 
-// Helper function to generate pseudo-random but consistent report data based on disease
 const generateReportData = (disease: Disease): HealthReport => {
-  // Use the confidence to determine severity
   const severityScore = disease.confidence > 0.9 ? 0.7 : disease.confidence > 0.8 ? 0.5 : 0.3;
-  // Generate spread risk based on type
   const spreadRisk = disease.type === 'fungal' ? 'significant' : 
                      disease.type === 'bacterial' ? 'moderate' : 
                      disease.type === 'viral' ? 'severe' : 'minimal';
   
-  // Generate treatment steps based on existing treatment description
   const treatmentSteps = disease.treatment 
     ? disease.treatment.split('. ').filter(step => step.length > 5)
     : ["No specific treatment recommended at this time"];
@@ -102,7 +96,6 @@ const generateReportData = (disease: Disease): HealthReport => {
   };
 };
 
-// Data for charts
 const getSeverityChartData = (score: number) => {
   return [
     { name: 'Severity', value: score * 100 },
@@ -117,7 +110,6 @@ const getSpreadRiskData = (score: number) => {
   ];
 };
 
-// Fixed chart config (corrected to match interface)
 const chartConfig = {
   severityHigh: { 
     theme: { light: '#ef4444', dark: '#ef4444' } 
@@ -140,14 +132,11 @@ const chartConfig = {
 };
 
 const CropHealthReport: React.FC = () => {
-  // Get disease data from location state
   const location = useLocation();
   const disease = location.state?.disease;
 
-  // Generate report data
   const report = disease ? generateReportData(disease) : null;
 
-  // If no disease data is available, show a message
   if (!disease || !report) {
     return (
       <div className="w-full animate-fade-in space-y-8 p-6">
@@ -177,7 +166,6 @@ const CropHealthReport: React.FC = () => {
     );
   }
 
-  // Dynamic styling based on severity
   const getSeverityColor = (level: string) => {
     switch (level) {
       case 'high': return 'text-red-500 dark:text-red-400';
@@ -211,7 +199,6 @@ const CropHealthReport: React.FC = () => {
           </p>
         </div>
         
-        {/* Overview Card */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2">
@@ -265,7 +252,7 @@ const CropHealthReport: React.FC = () => {
               <div className="flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <ChartContainer className="h-32">
+                    <ChartContainer className="h-32" config={chartConfig}>
                       <PieChart>
                         <Pie
                           data={getSeverityChartData(report.severity.score)}
@@ -290,7 +277,7 @@ const CropHealthReport: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <ChartContainer className="h-32">
+                    <ChartContainer className="h-32" config={chartConfig}>
                       <PieChart>
                         <Pie
                           data={getSpreadRiskData(report.spread.rate)}
@@ -325,7 +312,6 @@ const CropHealthReport: React.FC = () => {
           </CardContent>
         </Card>
         
-        {/* Treatment Recommendations */}
         {disease.type !== 'healthy' && (
           <Card className="mt-6">
             <CardHeader className="pb-2">
@@ -352,7 +338,6 @@ const CropHealthReport: React.FC = () => {
           </Card>
         )}
         
-        {/* Preventive Measures */}
         <Card className="mt-6">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2">
@@ -390,7 +375,6 @@ const CropHealthReport: React.FC = () => {
           </CardContent>
         </Card>
         
-        {/* Scientific References */}
         <Card className="mt-6">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2">
@@ -420,7 +404,6 @@ const CropHealthReport: React.FC = () => {
           </CardFooter>
         </Card>
         
-        {/* Overall Conclusion */}
         <Card className="mt-6 border-t-4 border-primary">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2">
