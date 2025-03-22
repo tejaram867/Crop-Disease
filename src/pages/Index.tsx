@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Layout } from '../components/Layout';
 import { ImageUploader } from '../components/ImageUploader';
@@ -65,9 +64,9 @@ const Index = () => {
         <div className="mb-10 relative rounded-xl overflow-hidden shadow-lg">
           <div className="relative aspect-video w-full h-[400px]">
             <img 
-              src="/transparent-crop.png" 
+              src="https://images.unsplash.com/photo-1518495973542-4542c06a5843" 
               alt="Healthy crop plants" 
-              className="w-full h-full object-contain absolute inset-0 z-10"
+              className="w-full h-full object-cover absolute inset-0 z-10"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20 z-0"></div>
             <div className="absolute inset-0 flex flex-col justify-center items-center z-20 p-6 text-center">
