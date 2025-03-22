@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Layout } from '../components/Layout';
 import { ImageUploader } from '../components/ImageUploader';
@@ -66,14 +67,14 @@ const Index = () => {
             <img 
               src="https://images.unsplash.com/photo-1518495973542-4542c06a5843" 
               alt="Healthy crop plants" 
-              className="w-full h-full object-cover absolute inset-0 z-10"
+              className="w-full h-full object-cover absolute inset-0 z-10 opacity-50"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20 z-0"></div>
-            <div className="absolute inset-0 flex flex-col justify-center items-center z-20 p-6 text-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary/20 z-20"></div>
+            <div className="absolute inset-0 flex flex-col justify-center items-center z-30 p-6 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-4">
                 CropGuardian
               </h2>
-              <p className="text-lg text-white drop-shadow-md max-w-lg">
+              <p className="text-lg text-white drop-shadow-md max-w-lg font-medium">
                 Your AI-powered assistant for identifying and treating crop diseases
               </p>
             </div>
